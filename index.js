@@ -1,5 +1,7 @@
 const express = require("express");
 
+const db = require("./dbConnectExec.js");
+
 const app = express();
 
 app.listen(5000, () => {
@@ -16,3 +18,20 @@ app.get("/", (req, res) => {
 
 // app.post()
 // app.put()
+
+app.get("/items", (req, res) => {
+  // get data from the database
+  db.executeQuery(
+    `SELECT *
+  FROM Item
+  Left Join Category
+  on Category.CategoryPK = Item.CategoryFK`
+  )
+    .then((theResults) => {
+      res.status(200).send(theResults);
+    })
+    .catch((myError) => {
+      console.log(myError);
+      res.status(500).send();
+    });
+});
