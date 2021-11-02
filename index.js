@@ -35,3 +35,28 @@ app.get("/items", (req, res) => {
       res.status(500).send();
     });
 });
+
+app.get("/items/:pk", (req, res) => {
+  let pk = req.params.pk;
+  //   console.log(pk);
+
+  let myQuery = `SELECT *
+    FROM Item
+    Left Join Category
+    on Category.CategoryPK = Item.CategoryFK
+    WHERE ItemPK = ${pk}`;
+
+  db.executeQuery(myQuery)
+    .then((result) => {
+      // console.log("result", result);
+      if (result[0]) {
+        res.send(result[0]);
+      } else {
+        res.status(404).send(`bad request`);
+      }
+    })
+    .catch((err) => {
+      console.log("Error in /items/:pk", err);
+      res.status(500).send();
+    });
+});

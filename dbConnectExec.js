@@ -6,7 +6,7 @@ const config = {
   user: APIConfig.DB.user,
   password: APIConfig.DB.password,
   server: APIConfig.DB.server,
-  database: APIConfig.DB.databse,
+  database: APIConfig.DB.database,
 };
 
 async function executeQuery(aQuery) {
