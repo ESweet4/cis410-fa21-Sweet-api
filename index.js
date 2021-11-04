@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const db = require("./dbConnectExec.js");
 const APIConfig = require("./config.js");
 const jwt = require("jsonwebtoken");
+const auth = require("./middleware/authenticate");
 
 const app = express();
 
@@ -22,6 +23,37 @@ app.get("/", (req, res) => {
 
 // app.post()
 // app.put()
+
+app.post("/orders", auth, async (req, res) => {
+  try {
+    let itemFK = req.body.itemFK;
+    let quantity = req.body.quantity;
+    // will find customerFk later
+
+    if (!itemFK || !quantity || !Number.isInteger(quantity)) {
+      return res.status(400).send("bad request");
+    }
+    // console.log("My Order: ", itemFK, quantity);
+    // console.log("Here is the customer: ", req.customer);
+
+    let insertQuery = `INSERT INTO [Order](ItemFK, Quantity, CustomerFK)
+    OUTPUT inserted.ItemFK, inserted.OrderPK, inserted.Quantity
+    VALUES ('${itemFK}', '${quantity}', ${req.customer.CustomerPK})`;
+
+    let insertedOrder = await db.executeQuery(insertQuery);
+    // console.log("Inserted Order: ", insertedOrder);
+    res.status(201).send(insertedOrder[0]);
+
+    res.send("here is the response");
+  } catch (err) {
+    console.log("error in POST /orders", err);
+    res.status(500).send();
+  }
+});
+
+app.get("/contacts/me", auth, (req, res) => {
+  res.send(req.customer);
+});
 
 app.post("/contacts/login", async (req, res) => {
   // console.log("/contacts/login called", req.body);
