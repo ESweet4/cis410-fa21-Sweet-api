@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/013ad7a7-e072-477f-a286-86155f2c8455/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/cis410-fa21-Sweet-api",
+  "appService.deploySubpath": "."
+}
