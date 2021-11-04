@@ -4,10 +4,11 @@ const db = require("./dbConnectExec.js");
 const APIConfig = require("./config.js");
 const jwt = require("jsonwebtoken");
 const auth = require("./middleware/authenticate");
-
+const cors = require("cors");
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 const PORT = process.env.PORT || 5000;
 
