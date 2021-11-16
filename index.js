@@ -41,19 +41,33 @@ app.post("/contacts/logout", auth, (req, res) => {
       res.status(500).send();
     });
 });
-// app.get("/orders/me", auth, async (req, res)=>{
-//   //1. get the CUstomerPK
+app.get("/orders/me", auth, async (req, res) => {
+  //1. get the CustomerPK
+  // let customerPK = req.body.CustomerPK;
 
-//   //2. Query databse for user records
+  //2. Query databse for user records
+  let query = `SELECT [OrderPK]
+  ,[Quantity]
+  ,[CustomerFK]
+  ,[ItemFK]
+  ,[ItemName]
+  ,[Cost]
+  FROM [dbo].[Order]
 
-//   //3. send user's orders back to them
-// })
+  LEFT JOIN Item on [dbo].[Order].ItemFK = Item.ItemPK`;
+  try {
+    let ordersQuery = await db.executeQuery(query);
+    res.status(200).send(ordersQuery);
+  } catch (err) {
+    console.log(err);
+    res.send(500).send();
+  }
+  //3. send user's orders back to them
+});
 
-// app.patch("/orders/:pk", auth, async(req, res)=> {
+app.patch("/orders/:pk", auth, async (req, res) => {});
 
-// })
-
-// app.delete("/orders/:pk", )
+app.delete("/orders/:pk");
 
 app.post("/orders", auth, async (req, res) => {
   try {
