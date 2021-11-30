@@ -44,7 +44,7 @@ app.post("/contacts/logout", auth, (req, res) => {
 app.get("/orders/me", auth, async (req, res) => {
   //1. get the CustomerPK
   // let customerPK = req.body.CustomerPK;
-
+  console.log(req.customer, "here");
   //2. Query databse for user records
   let query = `SELECT [OrderPK]
   ,[Quantity]
@@ -54,7 +54,8 @@ app.get("/orders/me", auth, async (req, res) => {
   ,[Cost]
   FROM [dbo].[Order]
 
-  LEFT JOIN Item on [dbo].[Order].ItemFK = Item.ItemPK`;
+  LEFT JOIN Item on [dbo].[Order].ItemFK = Item.ItemPK
+  WHERE CustomerFK=${req.customer.CustomerPK}`;
   try {
     let ordersQuery = await db.executeQuery(query);
     res.status(200).send(ordersQuery);
@@ -65,9 +66,9 @@ app.get("/orders/me", auth, async (req, res) => {
   //3. send user's orders back to them
 });
 
-app.patch("/orders/:pk", auth, async (req, res) => {});
+// app.patch("/orders/:pk", auth, async (req, res) => {});
 
-app.delete("/orders/:pk");
+// app.delete("/orders/:pk");
 
 app.post("/orders", auth, async (req, res) => {
   try {
